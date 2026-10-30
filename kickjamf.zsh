@@ -3,7 +3,7 @@
 
 ##################################### VARIABLES ##########################################
 
-vers="1.00"
+vers="1.01"
 myPID=$$
 scriptName=$( /usr/bin/basename ${0} )
 myTimeStamp()
