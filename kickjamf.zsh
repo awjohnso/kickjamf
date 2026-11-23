@@ -3,7 +3,7 @@
 
 ##################################### VARIABLES ##########################################
 
-vers="1.01"
+vers="1.02"
 myPID=$$
 scriptName=$( /usr/bin/basename ${0} )
 myTimeStamp()
@@ -63,7 +63,7 @@ function CHECK_JSS_CONNECTION()
 function FORCE_JAMF()
 {
 	/usr/local/bin/jamf manage
-	/usr/bin/wait 1
+	sleep 1
 	/usr/local/bin/jamf policy
 }
 
@@ -73,5 +73,5 @@ MY_VERSION ${Numb_Arguments} ${argument_1}
 
 START_SCRIPT
 CHECK_JSS_CONNECTION
-#FORCE_JAMF
+FORCE_JAMF
 EXIT_SCRIPT
