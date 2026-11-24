@@ -4,7 +4,7 @@
 ##########################################################################################
 ################################ SET VARIABLES ###########################################
 
-vers="1.03"
+vers="1.04"
 myPID=$$
 scriptName=$( /usr/bin/basename ${0} )
 myTimeStamp()
@@ -52,8 +52,11 @@ function MY_VERSION()
 function CHECK_JSS_CONNECTION()
 {
 	logging "CHECK_JSS_CONNECTION: Starting CHECK_JSS_CONNECTION."
-	/usr/local/bin/jamf checkJSSConnection -retry 24
-	if [ $? -eq 1 ]; then
+	/usr/local/bin/jamf checkJSSConnection -retry 24 2>&1 | while IFS= read -r line; do
+		logging "CHECK_JSS_CONNECTION: ${line}"
+	done
+	jamfExitCode=${pipestatus[1]}
+	if [ ${jamfExitCode} -eq 1 ]; then
 		logging "CHECK_JSS_CONNECTION: No network connection detected."
 		logging "CHECK_JSS_CONNECTION: Ending CHECK_JSS_CONNECTION."
 		EXIT_SCRIPT
@@ -64,9 +67,15 @@ function CHECK_JSS_CONNECTION()
 }
 function FORCE_JAMF()
 {
-	/usr/local/bin/jamf manage
+	logging "FORCE_JAMF: Starting FORCE_JAMF."
+	/usr/local/bin/jamf manage 2>&1 | while IFS= read -r line; do
+		logging "FORCE_JAMF: ${line}"
+	done
 	sleep 1
-	/usr/local/bin/jamf policy
+	/usr/local/bin/jamf policy 2>&1 | while IFS= read -r line; do
+		logging "FORCE_JAMF: ${line}"
+	done
+	logging "FORCE_JAMF: Ending FORCE_JAMF." 
 }
 
 ##########################################################################################
@@ -77,4 +86,4 @@ MY_VERSION ${Numb_Arguments} ${argument_1}
 START_SCRIPT
 CHECK_JSS_CONNECTION
 FORCE_JAMF
-EXIT_SCRIPT
+EXIT_SCRIP
